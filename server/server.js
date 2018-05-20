@@ -10,12 +10,18 @@ app configuration
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
+
+
 /*
 Login route
 path: /
 */
 app.get('/', (req, res) => {
   res.render('login.ejs');
+});
+
+app.get('/signup', (req, res) => {
+  res.render('signup.ejs');
 });
 
 app.listen(3000, () => {
