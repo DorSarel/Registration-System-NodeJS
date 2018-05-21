@@ -20,6 +20,10 @@ app.get('/', (req, res) => {
   res.render('login.ejs');
 });
 
+/*
+Signup route
+path: /signup
+*/
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
 });
