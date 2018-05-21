@@ -35,8 +35,7 @@ app.post('/signup', (req, res) => {
   // Getting user information from POST req
   let userObj = _.pick(req.body, ['email', 'password']);
 
-
-
+  // Creating new user and assign token
   let newUser = new User(userObj);
   newUser.save()
   .then(() => {
