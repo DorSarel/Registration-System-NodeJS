@@ -2,10 +2,11 @@ const express = require('express');
 const mongoose = require('./db/db');
 const _ = require('lodash');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 const User = require('./models/user');
-
+const {authenticate} = require('./middleware/middleware');
 
 /*
 app configuration
@@ -14,6 +15,7 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 /*
 Login route
@@ -42,13 +44,16 @@ app.post('/signup', (req, res) => {
     return newUser.generateAuthToken();
   })
   .then((token) => {
-    res.status(200).send({
-      msg: 'User has been signed in'
-    })
+    res.cookie('x-auth', token);
+    res.redirect('/hello');
   })
   .catch((e) => {
     res.status(400).send(e);
   });
+});
+
+app.get('/hello',authenticate, (req, res) => {
+  res.render('hello.ejs', {user: req.user});
 });
 
 app.listen(3000, () => {

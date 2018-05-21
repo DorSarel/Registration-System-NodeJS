@@ -33,7 +33,7 @@ userSchema.methods.generateAuthToken = function() {
   });
 };
 
-userSchema.static.findByToken = function(token) {
+userSchema.statics.findByToken = function(token) {
   let User = this;
   let decoded;
 
@@ -41,7 +41,7 @@ userSchema.static.findByToken = function(token) {
     decoded = jwt.verify(token, 'check');
   }
   catch (e) {
-    Promise.reject();
+    Promise.reject(e);
   }
 
   return User.findOne({

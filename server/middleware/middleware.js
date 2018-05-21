@@ -1,7 +1,7 @@
 const User = require('./../models/user');
 
 function authenticate(req, res, next) {
-  let token = req.cookies;
+  let token = req.cookies['x-auth'];
 
   User.findByToken(token)
     .then((user) => {
@@ -14,9 +14,7 @@ function authenticate(req, res, next) {
       next();
     })
     .catch((e) => {
-      res.status(401).send({
-        eMsg: 'User is not authenticated'
-      })
+      res.status(401).send(e);
     });
 }
 
