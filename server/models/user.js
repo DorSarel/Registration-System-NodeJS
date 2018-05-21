@@ -22,9 +22,7 @@ const userSchema = new mongoose.Schema({
   }]
 });
 
-const User = mongoose.model('User', userSchema);
-
-User.methods.generateAuthToken = function() {
+userSchema.methods.generateAuthToken = function() {
   let user = this;
   let access = 'auth';
   let token = jwt.sign({_id: user._id.toHexString(), access}, 'check').toString();
@@ -34,5 +32,7 @@ User.methods.generateAuthToken = function() {
     return token;
   });
 };
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

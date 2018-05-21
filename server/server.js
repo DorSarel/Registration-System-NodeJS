@@ -33,7 +33,9 @@ app.get('/signup', (req, res) => {
 
 app.post('/signup', (req, res) => {
   // Getting user information from POST req
-  let userObj = _.pick(req.body, ['email', 'userPass']);
+  let userObj = _.pick(req.body, ['email', 'password']);
+
+
 
   let newUser = new User(userObj);
   newUser.save()
@@ -41,10 +43,12 @@ app.post('/signup', (req, res) => {
     return newUser.generateAuthToken();
   })
   .then((token) => {
-    // Redirect to relevant page after signin
+    res.status(200).send({
+      msg: 'User has been signed in'
+    })
   })
   .catch((e) => {
-    throw e;
+    res.status(400).send(e);
   });
 });
 
