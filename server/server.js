@@ -59,6 +59,7 @@ app.post('/login', (req, res) => {
     })
     .then((token) => {
       res.cookie('x-auth', token);
+      req.flash('success', 'You logged in successfully');
       res.redirect('/hello');
     })
     .catch((e) => {
@@ -88,16 +89,19 @@ app.post('/signup', (req, res) => {
   })
   .catch((e) => {
     let eMsg;
-    if (e.errors) {
+    if (e.errors.email) {
       eMsg = e.errors.email.message;
     }
-    else {
-      eMsg = 'This email already registered';
+    else if (e.errors.password) {
+      eMsg = 'Password minimum length is 6 chars';
+    }
+    else if (e.code === 11000) {
+      eMsg = 'This email is already registered';
     }
 
     req.flash('error', eMsg);
     res.redirect('/signup');
-    res.send(e);
+    // res.send(e);
   });
 });
 
@@ -117,6 +121,7 @@ app.post('/logout', authenticate, (req, res) => {
 
   user.save()
     .then(() => {
+      req.flash('success', 'You successfully logged out');
       res.redirect('/');
     })
     .catch((e) => {
