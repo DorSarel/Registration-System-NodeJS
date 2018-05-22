@@ -19,7 +19,23 @@ app.use(cookieParser());
 
 
 app.get('/', (req, res) => {
-  res.render('login.ejs');
+  let token = req.cookies['x-auth'];
+  if (token) {
+    User.findByToken(token)
+      .then((user) => {
+        if (!user) {
+          return Promise.reject('No user fonud');
+        }
+
+          res.render('login.ejs', {user: user});
+      })
+      .catch((e) => {
+        res.status(400).send(e);
+      })
+  }
+  else {
+      res.render('login.ejs', {user: null});
+  }
 });
 
 app.post('/login', (req, res) => {
