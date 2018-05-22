@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
   let userObj = _.pick(req.body, ['email', 'password']);
 
-  User.findByCredential()
+  User.findByCredential(userObj)
     .then((user) => {
       return user.generateAuthToken();
     })

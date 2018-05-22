@@ -54,6 +54,24 @@ userSchema.statics.findByToken = function(token) {
   return Promise.reject('Token is undefined');
 }
 
+userSchema.statics.findByCredential = function(userObj) {
+  let User = this;
+
+  return User.findOne({
+    email: userObj.email
+  })
+    .then((user) => {
+      if (user.passwod !== userObj.password) {
+        throw new Error('Password in DB not match to entered password');
+      }
+
+      return user;
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    });
+}
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
