@@ -65,6 +65,7 @@ app.post('/login', (req, res) => {
     })
     .catch((e) => {
       req.flash('error', e);
+      console.log(JSON.stringify(e, "", 4));
       res.redirect('/');
       // res.send(e);
     })
