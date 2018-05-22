@@ -63,7 +63,9 @@ app.post('/login', (req, res) => {
       res.redirect('/hello');
     })
     .catch((e) => {
-      res.status(400).send(e);
+      req.flash('error', e);
+      res.redirect('/');
+      // res.send(e);
     })
 });
 

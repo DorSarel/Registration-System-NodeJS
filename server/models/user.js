@@ -70,14 +70,15 @@ userSchema.statics.findByCredential = function(userObj) {
     email: userObj.email
   })
     .then((user) => {
-      if (user.passwod !== userObj.password) {
-        throw new Error('Password in DB not match to entered password');
+      if (!user) {
+        return Promise.reject('User does not exist');
+      }
+
+      if (user.password !== userObj.password) {
+        return Promise.reject('Passwords do not match');
       }
 
       return user;
-    })
-    .catch((e) => {
-      res.status(400).send(e);
     });
 }
 
