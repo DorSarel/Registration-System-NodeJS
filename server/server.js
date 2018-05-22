@@ -36,13 +36,14 @@ app.get('/', (req, res) => {
     User.findByToken(token)
       .then((user) => {
         if (!user) {
-          return Promise.reject('No user fonud');
+          return Promise.reject('No user found');
         }
 
           res.render('login.ejs', {user: user});
       })
       .catch((e) => {
-        res.status(400).send(e);
+        req.flash('error', e);
+        res.redirect('/signup');
       })
   }
   else {
