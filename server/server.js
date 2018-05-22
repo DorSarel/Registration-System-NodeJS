@@ -17,7 +17,7 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('secret'));
 app.use(session({cookie: {maxAge: 60000 }}));
 app.use(flash());
 
@@ -60,7 +60,7 @@ app.post('/login', (req, res) => {
 
 
 app.get('/signup', (req, res) => {
-  res.render('signup.ejs');
+  res.render('signup.ejs', {msg: req.flash('error')});
 });
 
 app.post('/signup', (req, res) => {
@@ -78,7 +78,10 @@ app.post('/signup', (req, res) => {
     res.redirect('/hello');
   })
   .catch((e) => {
-    res.status(400).send('Just check');
+    eMsg = e.errors.email.message;
+    req.flash('error', eMsg);
+    res.redirect('/signup');
+    // res.send(e);
   });
 });
 
