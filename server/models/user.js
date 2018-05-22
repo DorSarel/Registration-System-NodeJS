@@ -37,18 +37,21 @@ userSchema.statics.findByToken = function(token) {
   let User = this;
   let decoded;
 
-  try {
-    decoded = jwt.verify(token, 'check');
-  }
-  catch (e) {
-    Promise.reject(e);
-  }
+  if (token) {
+    try {
+      decoded = jwt.verify(token, 'check');
+    }
+    catch (e) {
+      return Promise.reject(e);
+    }
 
-  return User.findOne({
-    _id: decoded._id,
-    'tokens.access': 'auth',
-    'tokens.token': token
-  });
+    return User.findOne({
+      _id: decoded._id,
+      'tokens.access': 'auth',
+      'tokens.token': token
+    });
+  }
+  return Promise.reject('Token is undefined');
 }
 
 const User = mongoose.model('User', userSchema);
