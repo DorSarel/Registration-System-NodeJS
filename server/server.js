@@ -21,6 +21,14 @@ app.use(cookieParser('secret'));
 app.use(session({cookie: {maxAge: 60000 }}));
 app.use(flash());
 
+// Locals
+app.use((req, res, next) => {
+  res.locals.error = req.flash('error');
+  res.locals.success = req.flash('success');
+  next();
+});
+
+
 
 app.get('/', (req, res) => {
   let token = req.cookies['x-auth'];
@@ -75,13 +83,21 @@ app.post('/signup', (req, res) => {
   })
   .then((token) => {
     res.cookie('x-auth', token);
+    req.flash('success', 'You successfully signed up');
     res.redirect('/hello');
   })
   .catch((e) => {
-    eMsg = e.errors.email.message;
+    let eMsg;
+    if (e.errors) {
+      eMsg = e.errors.email.message;
+    }
+    else {
+      eMsg = 'This email already registered';
+    }
+
     req.flash('error', eMsg);
     res.redirect('/signup');
-    // res.send(e);
+    res.send(e);
   });
 });
 
