@@ -22,6 +22,22 @@ app.get('/', (req, res) => {
   res.render('login.ejs');
 });
 
+app.post('/', (req, res) => {
+  let userObj = _.pick(req.body, ['email', 'password']);
+
+  User.findByCredential()
+    .then((user) => {
+      return user.generateAuthToken();
+    })
+    .then((token) => {
+      res.cookie('x-auth', token);
+      res.redirect('/hello');
+    })
+    .catch((e) => {
+      res.status(400).send(e);
+    })
+});
+
 
 app.get('/signup', (req, res) => {
   res.render('signup.ejs');
