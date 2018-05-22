@@ -3,6 +3,8 @@ const mongoose = require('./db/db');
 const _ = require('lodash');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const flash = require('connect-flash');
 const app = express();
 
 const User = require('./models/user');
@@ -16,6 +18,8 @@ app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({cookie: {maxAge: 60000 }}));
+app.use(flash());
 
 
 app.get('/', (req, res) => {
@@ -74,7 +78,7 @@ app.post('/signup', (req, res) => {
     res.redirect('/hello');
   })
   .catch((e) => {
-    res.status(400).send(e);
+    res.status(400).send('Just check');
   });
 });
 
