@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
   res.render('login.ejs');
 });
 
-app.post('/', (req, res) => {
+app.post('/login', (req, res) => {
   let userObj = _.pick(req.body, ['email', 'password']);
 
   User.findByCredential(userObj)
