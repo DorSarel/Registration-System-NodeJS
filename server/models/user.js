@@ -92,17 +92,10 @@ userSchema.statics.findByCredential = function(userObj) {
         return Promise.reject('User does not exist');
       }
 
-      return new Promise((resolve, reject) => {
-        bcrypt.compare(userObj.password, user.password)
-          .then((res) => {
-            if (res) {
-              resolve(user);
-            }
-            else {
-              reject('Password do not match');
-            }
-          });
-      });
+      return bcrypt.compare(userObj.password, user.password)
+        .then((res) => {
+          return user;
+        });
     });
 }
 
