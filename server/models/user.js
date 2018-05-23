@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const {SECRET} = require('./../config/config');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -52,7 +53,7 @@ userSchema.pre('save', function(next) {
 userSchema.methods.generateAuthToken = function() {
   let user = this;
   let access = 'auth';
-  let token = jwt.sign({_id: user._id.toHexString(), access}, 'check').toString();
+  let token = jwt.sign({_id: user._id.toHexString(), access}, SECRET).toString();
 
   user.tokens = user.tokens.concat([{access , token}]);
   return user.save().then(() => {
@@ -66,7 +67,7 @@ userSchema.statics.findByToken = function(token) {
 
   if (token) {
     try {
-      decoded = jwt.verify(token, 'check');
+      decoded = jwt.verify(token, SECRET);
     }
     catch (e) {
       return Promise.reject('Failed to decode token');
